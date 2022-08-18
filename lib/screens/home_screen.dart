@@ -17,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String fromLn = 'From Language';
   String toLn = 'To Language';
   List<Language> lnList = [];
+  final inputTextController = TextEditingController();
 
   Future getData() async {
     final responseData = await http.get(
@@ -45,6 +46,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getData();
+    inputTextController.addListener(() {
+      print(inputTextController.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    inputTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -85,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: inputTextController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
