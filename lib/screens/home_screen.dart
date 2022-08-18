@@ -14,8 +14,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String fromLn = 'Select Language';
-  String toLn = 'Select Language';
+  String fromLn = 'From Language';
+  String toLn = 'To Language';
   List<Language> lnList = [];
 
   Future getData() async {
@@ -63,12 +63,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LnSelectButton(context, fromLn),
-                LnSelectButton(context, toLn),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                      flex: 2, child: LnSelectButton(context, fromLn, true)),
+                  Expanded(
+                    flex: 1,
+                    child: const SizedBox(
+                      width: 10,
+                      child: Icon(Icons.arrow_forward),
+                    ),
+                  ),
+                  Expanded(
+                      flex: 2, child: LnSelectButton(context, toLn, false)),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  labelText: 'Enter Text to be translated',
+                ),
+              ),
+            ),
+            Container(
+              child: Text('Hello',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.normal,
+                  )),
             ),
           ],
         ),
@@ -76,10 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  InkWell LnSelectButton(BuildContext context, String ln) {
+  InkWell LnSelectButton(BuildContext context, String ln, bool isFrom) {
     return InkWell(
       onTap: () {
-        showModal(context);
+        showModal(context, isFrom);
       },
       child: Card(
         color: Colors.blueAccent,
@@ -100,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void showModal(context) {
+  void showModal(context, bool isFrom) {
     showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -117,7 +147,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(lnList[index].language.toString()),
                       onTap: () {
                         setState(() {
-                          fromLn = lnList[index].language.toString();
+                          isFrom
+                              ? fromLn = lnList[index].language.toString()
+                              : toLn = lnList[index].language.toString();
                         });
                         Navigator.of(context).pop();
                       });
