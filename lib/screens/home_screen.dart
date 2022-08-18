@@ -107,11 +107,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Container(
-              child: Text('Hello',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.normal,
-                  )),
+              child: StreamBuilder<Object>(
+                stream: null,
+                builder: (context, snapshot) {
+                  return Text('Hello',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                      ));
+                }
+              ),
             ),
           ],
         ),
