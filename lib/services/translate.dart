@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:translate_app/models/traslate.dart';
 
+String targetText = '';
+
 translate(String source, String target, String query) async {
   List<Translation> translations = [];
   print('q={$query}&target={$target}&source={$source}');
-  String targetText = '';
   var headers = {
     'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com',
     'X-RapidAPI-Key': '21b2cc4651msha46a43a31fc93f2p11c402jsnee93d4687d68',

@@ -50,9 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getData();
-    inputTextController.addListener(() {
-      // print(inputTextController.text);
-    });
   }
 
   @override
@@ -130,6 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   translateText() {
     target = translate(fromLn, toLn, inputTextController.text).toString();
+    target = targetText;
+    setState(() {
+      target = targetText;
+    });
   }
 
   InkWell LnSelectButton(BuildContext context, String ln, bool isFrom) {
