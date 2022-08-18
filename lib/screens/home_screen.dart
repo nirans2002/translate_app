@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:translate_app/components/language_select_bottom_sheet.dart';
+import 'package:translate_app/models/languages.dart';
+import 'package:translate_app/services/get_lan.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -9,8 +14,42 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String fromLn = 'Select Language';
+  String toLn = 'Select Language';
+  List<Language> lnList = [];
+
+  Future getData() async {
+    final responseData = await http.get(
+        Uri.parse(
+            'https://google-translate1.p.rapidapi.com/language/translate/v2/languages'),
+        headers: {
+          'Accept-Encoding': "application/gzip",
+          'X-RapidAPI-Key':
+              "21b2cc4651msha46a43a31fc93f2p11c402jsnee93d4687d68",
+          'X-RapidAPI-Host': "google-translate1.p.rapidapi.com"
+        });
+    print(responseData.body.toString());
+    if (responseData.statusCode == 200) {
+      final data = jsonDecode(responseData.body);
+      final language = data['data']['languages'];
+      lnList = []; // clear list
+      for (Map<String, dynamic> i in language) {
+        lnList.add(Language.fromJson(i));
+      }
+
+      // print(dataList);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // print(lnList[0].language.toString());
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -29,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 InkWell(
                   onTap: () {
-                    getData();
-                    language_select_show_bottom_sheet(context);
+                    print(lnList);
+                    fromLn = LnSelectBottomSheet(context, lnList);
                   },
                   child: Card(
                     color: Colors.blueAccent,
@@ -38,13 +77,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: MediaQuery.of(context).size.height * 0.1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
                       child: Center(
                         child: Text(
-                          'English',
-                          style: TextStyle(fontSize: 20),
+                          fromLn,
+                          style: const TextStyle(fontSize: 20),
                         ),
                       ),
                     ),
