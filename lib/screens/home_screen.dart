@@ -29,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 InkWell(
                   onTap: () {
+                    getData();
                     language_select_show_bottom_sheet(context);
                   },
                   child: Card(
