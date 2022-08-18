@@ -7,6 +7,7 @@ import 'package:translate_app/components/language_select_bottom_sheet.dart';
 import 'package:translate_app/models/languages.dart';
 import 'package:translate_app/providers/targettext.dart';
 import 'package:translate_app/services/get_lan.dart';
+import 'package:translate_app/services/translate.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String toLn = 'To Language';
   List<Language> lnList = [];
   final inputTextController = TextEditingController();
+  String target = "Translated Text";
 
   Future getData() async {
     final responseData = await http.get(
@@ -44,17 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _translate(BuildContext context) {
-    Provider.of<TargetText>(context, listen: false).updateText();
-  }
-
   @override
   void initState() {
     super.initState();
     getData();
     inputTextController.addListener(() {
       // print(inputTextController.text);
-      _translate(context);
     });
   }
 
@@ -68,8 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var target = Provider.of<TargetText>(context).getText;
-
     // print(lnList[0].language.toString());
     return Scaffold(
       body: SafeArea(
@@ -103,10 +98,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  translate(fromLn, toLn, inputTextController.text);
+                },
+                child: Text('data')),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                onChanged: ,
+                onChanged: translateText(),
                 controller: inputTextController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -126,6 +126,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  translateText() {
+    target = translate(fromLn, toLn, inputTextController.text).toString();
   }
 
   InkWell LnSelectButton(BuildContext context, String ln, bool isFrom) {
