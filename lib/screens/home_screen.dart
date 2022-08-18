@@ -66,34 +66,63 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InkWell(
-                  onTap: () {
-                    print(lnList);
-                    fromLn = LnSelectBottomSheet(context, lnList);
-                  },
-                  child: Card(
-                    color: Colors.blueAccent,
-                    elevation: 5.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Center(
-                        child: Text(
-                          fromLn,
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                LnSelectButton(context, fromLn),
+                LnSelectButton(context, toLn),
               ],
             ),
           ],
         ),
       ),
     );
-    ;
+  }
+
+  InkWell LnSelectButton(BuildContext context, String ln) {
+    return InkWell(
+      onTap: () {
+        showModal(context);
+      },
+      child: Card(
+        color: Colors.blueAccent,
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Text(
+              ln,
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showModal(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.all(8),
+            alignment: Alignment.center,
+            child: ListView.separated(
+                itemCount: lnList.length,
+                separatorBuilder: (context, int) {
+                  return Divider();
+                },
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                      child: Text(lnList[index].language.toString()),
+                      onTap: () {
+                        setState(() {
+                          fromLn = lnList[index].language.toString();
+                        });
+                        Navigator.of(context).pop();
+                      });
+                }),
+          );
+        });
   }
 }
