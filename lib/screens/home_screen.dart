@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:translate_app/components/language_select_bottom_sheet.dart';
 import 'package:translate_app/models/languages.dart';
+import 'package:translate_app/providers/targettext.dart';
 import 'package:translate_app/services/get_lan.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -42,12 +44,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _translate(BuildContext context) {
+    Provider.of<TargetText>(context, listen: false).updateText();
+  }
+
   @override
   void initState() {
     super.initState();
     getData();
     inputTextController.addListener(() {
-      print(inputTextController.text);
+      // print(inputTextController.text);
+      _translate(context);
     });
   }
 
@@ -61,6 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var target = Provider.of<TargetText>(context).getText;
+
     // print(lnList[0].language.toString());
     return Scaffold(
       body: SafeArea(
@@ -97,6 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                onChanged: ,
                 controller: inputTextController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -107,17 +117,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Container(
-              child: StreamBuilder<Object>(
-                stream: null,
-                builder: (context, snapshot) {
-                  return Text('Hello',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                      ));
-                }
-              ),
-            ),
+                child: Text(target,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                    ))),
           ],
         ),
       ),

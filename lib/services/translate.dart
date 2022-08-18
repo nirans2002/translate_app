@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future translate(String source, String target, String query) async {
+Future<String> translate(String source, String target, String query) async {
+  String targetText = '';
   final responseData = await http.post(
     Uri.parse(
         'https://google-translate1.p.rapidapi.com/language/translate/v2/translate?'),
@@ -20,4 +21,5 @@ Future translate(String source, String target, String query) async {
 
     print(data);
   }
+  return targetText;
 }
